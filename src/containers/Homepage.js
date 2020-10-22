@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import {
@@ -9,9 +10,6 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import {
-  login
-} from '../redux/actions/account'
 import { connect } from 'react-redux';
 import ScrollTop from '../components/ScrollToTop/ScrollToTop';
 import { KeyboardArrowUp as KeyboardArrowUpIcon } from '@material-ui/icons';
@@ -46,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Homepage = ({ children, login, }) => {
+const Homepage = ({ children }) => {
   const classes = useStyles();
   const [authDialogOpen, setAuthDialogOpen] = useState();
 
@@ -94,12 +92,16 @@ const Homepage = ({ children, login, }) => {
       </Container>
       <AuthDialog
         open={authDialogOpen}
-        handelClose={() => setAuthDialogOpen(false)}
-        doLogin={login}
+        handleClose={() => setAuthDialogOpen(false)}
       />
     </>
   );
 };
+
+
+Homepage.propTypes = {
+  children: PropTypes.isRequired, //todo
+}
 
 const mapStateToProps = (state, ownProps) => {
 
@@ -107,7 +109,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  {
-    login,
-  }
+  {}
 )(Homepage);

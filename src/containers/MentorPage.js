@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types';
 import {
   Button,
   Container,
@@ -147,6 +148,11 @@ const MentorPage = ({ mentorRequestNo, isLoading }) => {
       </Backdrop>
     </Container >
   )
+}
+
+MentorPage.propTypes = {
+  mentorRequestNo: PropTypes.number.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = (state) => {

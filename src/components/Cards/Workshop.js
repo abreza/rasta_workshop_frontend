@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import {
   Button,
   Container,
@@ -67,6 +68,13 @@ const WorkShopCard = ({ name, description, teamNo, mentorNo }) => {
       </CardActions>
     </Card >
   );
+}
+
+WorkShopCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  teamNo: PropTypes.number.isRequired,
+  mentorNo: PropTypes.number.isRequired,
 }
 
 export default WorkShopCard;

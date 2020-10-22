@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types'
 import {
   Button,
   Container,
@@ -9,8 +10,10 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
+import { connect } from 'react-redux'
 import { Close as CloseIcon } from '@material-ui/icons';
 import { useTranslate } from 'react-redux-multilingual/lib/context';
+import { login } from '../../../redux/actions/account'
 
 const useStyles = makeStyles((theme) => ({
   rightImage: {
@@ -28,19 +31,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AuthDialog({ open, handelClose, doLogin }) {
+function AuthDialog({ open, handleClose, login }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const classes = useStyles();
   const t = useTranslate();
 
   return (
-    <Dialog maxWidth="sm" fullWidth open={open} onClose={handelClose}>
+    <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose}>
       <Grid container>
         <Grid item sm={7}>
           <IconButton
             aria-label="close"
-            onClick={handelClose}
+            onClick={handleClose}
             className={classes.closeIcon}>
             <CloseIcon />
           </IconButton>
@@ -79,7 +82,7 @@ export default function AuthDialog({ open, handelClose, doLogin }) {
                 <Button
                   fullWidth
                   variant="contained"
-                  onClick={() => doLogin(email, password)}
+                  onClick={() => login(email, password)}
                   color="primary">
                   {t('login')}
                 </Button>
@@ -92,3 +95,22 @@ export default function AuthDialog({ open, handelClose, doLogin }) {
     </Dialog>
   );
 }
+
+AuthDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = (state, ownProps) => ({
+  open: ownProps.open,
+  handleClose: ownProps.handleClose,
+})
+
+export default connect(
+  mapStateToProps
+  ,
+  {
+    login,
+  }
+)(AuthDialog)
