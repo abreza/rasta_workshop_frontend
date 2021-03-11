@@ -1,4 +1,4 @@
-import './assets/styles/App.css';
+import './Theme/Styles/Style.scss';
 
 import { CssBaseline } from '@material-ui/core';
 import { StylesProvider } from '@material-ui/core/styles';
@@ -12,21 +12,31 @@ import { useHistory } from 'react-router-dom';
 
 import Notifier from './components/Notifications/Notifications';
 import { initRedirect } from './redux/actions/redirect';
-import Root from './root/Root';
-import MuiTheme from './theme/MuiTheme';
-import RTLMuiTheme from './theme/RTLMuiTheme';
+import WorkshopRoot from './root/Workshop';
+import ZeroJourneyerRoot from './root/ZeroJourneyer';
+import MuiTheme from './Theme/MuiThemes/MuiTheme';
+import RTLMuiTheme from './Theme/MuiThemes/RTLMuiTheme';
+import ZeroJourneyerMuiTheme from './Theme/MuiThemes/ZeroJourneyerMuiTheme'
 import translations from './translations';
 import jss from './utils/jssRTL';
 // Pushe.init('ld838ykvn2n75poe');
 // Pushe.subscribe();
 
-const AppRout = () => (
+const Workshop = () => (
   <SnackbarProvider>
     <Notifier />
     <CssBaseline />
-    <Root />
+    <WorkshopRoot />
   </SnackbarProvider>
 );
+
+const ZeroJourneyer = () => (
+  <SnackbarProvider>
+    <Notifier />
+    <CssBaseline />
+    <ZeroJourneyerRoot />
+  </SnackbarProvider>
+)
 
 const App = ({ dir, redirectTo, forceRedirect, initRedirect }) => {
   const history = useHistory();
@@ -51,16 +61,25 @@ const App = ({ dir, redirectTo, forceRedirect, initRedirect }) => {
   return (
     <IntlProvider translations={translations}>
       {dir === 'rtl' ? (
-        <ThemeProvider theme={RTLMuiTheme}>
-          <StylesProvider jss={jss}>
-            <AppRout />
-          </StylesProvider>
-        </ThemeProvider>
+        <>
+          <ThemeProvider theme={ZeroJourneyerMuiTheme}>
+            <StylesProvider jss={jss}>
+              <ZeroJourneyer />
+            </StylesProvider>
+          </ThemeProvider>
+          <ThemeProvider theme={RTLMuiTheme}>
+            <StylesProvider jss={jss}>
+              <Workshop />
+            </StylesProvider>
+          </ThemeProvider>
+        </>
       ) : (
-        <ThemeProvider theme={MuiTheme}>
-          <AppRout />
-        </ThemeProvider>
-      )}
+          <>
+            <ThemeProvider theme={MuiTheme}>
+              <Workshop />
+            </ThemeProvider>
+          </>
+        )}
     </IntlProvider>
   );
 };
