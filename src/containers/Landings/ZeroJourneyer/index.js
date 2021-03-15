@@ -4,21 +4,14 @@ import {
   Button,
   ButtonGroup,
   Container,
-  Fab,
   Grid,
   makeStyles,
-  Paper,
   Typography,
 } from '@material-ui/core';
-import { KeyboardArrowUp as KeyboardArrowUpIcon } from '@material-ui/icons';
-import clsx from 'clsx';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
-import ResponsiveAppBar from '../../../components/Appbar/ResponsiveAppBar';
 import AuthDialog from '../../../components/Dialog/AuthDialog/AuthDialog';
-import ScrollTop from '../../../components/ScrollToTop/ScrollToTop';
 import FAQ from '../../../components/SpecialComponents/Homepage/FAQ';
 import Footer from '../../../components/SpecialComponents/Homepage/Footer';
 import LandingOurTeam from '../../../components/SpecialComponents/Homepage/LandingOurTeam';
@@ -171,6 +164,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ZeroJourneyer = () => {
   const classes = useStyles();
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
 
   return (
     <div className={classes.container}>
@@ -214,8 +208,8 @@ const ZeroJourneyer = () => {
                 <Button rel="noreferrer" target="_blank" href={process.env.PUBLIC_URL + '/ZeroJourneyer/Question.pdf'} >
                   دریافت سوالات
               </Button>
-                <Button href='/registration'>
-                  ثبت‌نام
+                <Button onClick={() => setAuthDialogOpen(true)}>
+                  ورود
               </Button>
               </ButtonGroup>
             </Grid>
@@ -333,6 +327,11 @@ const ZeroJourneyer = () => {
       <Container className={classes.lastEmptySection} />
 
       <Footer />
+
+      <AuthDialog
+        open={authDialogOpen}
+        handleClose={() => setAuthDialogOpen(false)}
+      />
     </div >
   )
 }
