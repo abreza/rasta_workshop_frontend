@@ -128,17 +128,14 @@ const InputFields = ({
       return;
     }
     setButtonText('۱ دقیقه صبر کن');
-    getVerifyCode({ phone: data.phone }).then(
+    getVerifyCode({ phone: data.phone, code_type: 'verify' }).then(
       () => {
-        addNotification({ message: 'کد تایید فرستاده شد! این کد بعد از ۵ دقیقه منقضی میشه.', type: 'success' })
         setTimeout(() => {
           setButtonText('دریافت کد');
         }, 60000)
       }
     )
   }
-
-  console.log(data)
 
   const isValidEmail = (email) => {
     var regex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
@@ -389,3 +386,5 @@ export default connect(
     redirect,
   }
 )(InputFields)
+
+// todo: add 'inputProps={{ className: 'ltr-input' }}' to lrt fields

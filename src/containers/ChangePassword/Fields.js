@@ -16,9 +16,8 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux'
 
 import {
-  getTeamData,
+  changePassword,
   getVerifyCode,
-  register,
 } from '../../redux/actions/authentication'
 import { addNotification, } from '../../redux/actions/notifications'
 import { redirect } from '../../redux/actions/redirect'
@@ -45,11 +44,11 @@ const MyTextField = ({ ...rest }) => (
 
 const InputFields = ({
   isFetching,
-  register,
   getVerifyCode,
-  getTeamData,
+  changePassword,
   addNotification,
 }) => {
+
   const classes = useStyles();
   const [buttonText, setButtonText] = useState('دریافت کد');
   const [data, setData] = useState({
@@ -66,18 +65,9 @@ const InputFields = ({
   }
 
   const isEnglishDigits = (number) => {
-    var regex = new RegExp(`\\d*`);
+    var regex = new RegExp(`\\d{${number.length}}`);
     if (regex.test(number)) {
       return number;
-    } else {
-      return 'error'
-    }
-  }
-
-  const isEnglish = (string) => {
-    var regex = new RegExp(`[a-zA-Z0-9-_.]{${string.length}}`);
-    if (regex.test(string)) {
-      return string;
     } else {
       return 'error'
     }
@@ -97,24 +87,24 @@ const InputFields = ({
       addNotification({ message: 'یه شماره تلفن‌همراه وارد کن!', type: 'error' })
       return;
     }
+
     if (!isPhoneNumberValid(data.phone)) {
       addNotification({ message: 'شماره تلفنت معتبر نیست!', type: 'error' })
       return;
     }
+
     setButtonText('۱ دقیقه صبر کن');
-    getVerifyCode({ phone: data.phone }).then(
+    getVerifyCode({ phone: data.phone, code_type: 'changePass' }).then(
       () => {
-        addNotification({ message: 'کد تایید فرستاده شد! این کد بعد از ۵ دقیقه منقضی میشه.', type: 'success' })
         setTimeout(() => {
           setButtonText('دریافت کد');
-        }, 60000)
-      }
-    )
+        }, 6000)
+      })
   }
 
   console.log(data)
 
-  const doRecoverPassword = () => {
+  const doChangePassword = () => {
     const { phone, password, confirmationPassword } = data;
     if (!phone || !password) {
       addNotification({ message: 'لطفاً همه‌ی مواردی که ازت خواسته شده رو پر کن!', type: 'error' });
@@ -126,7 +116,7 @@ const InputFields = ({
       return;
     }
 
-    register(data);
+    changePassword(data);
   }
 
   return (
@@ -136,6 +126,7 @@ const InputFields = ({
           onBlur={putData}
           label='رمز عبور جدید'
           name='password'
+          inputProps={{ className: 'ltr-input' }}
           type='password' />
       </Grid>
 
@@ -144,6 +135,7 @@ const InputFields = ({
           onBlur={putData}
           label='تکرار رمز عبور جدید'
           type='password'
+          inputProps={{ className: 'ltr-input' }}
           name='confirmationPassword' />
       </Grid>
 
@@ -158,11 +150,12 @@ const InputFields = ({
           }
           value={data.phone}
           name='phone'
+          inputProps={{ className: 'ltr-input' }}
           label='شماره تلفن‌همراه'
           type='tel' />
       </Grid>
 
-      <Grid item container justify='center' alignItems='stretch' spacing={1}>
+      <Grid item container justify='space-between' alignItems='stretch' spacing={1}>
         <Grid item xs={8} sm={9}>
           <MyTextField
             onChange={
@@ -174,7 +167,8 @@ const InputFields = ({
             }
             value={data.verify_code}
             name='verify_code'
-            label='کد ۵ رقمی پیامک‌شده رو وارد کنید'
+            inputProps={{ className: 'ltr-input' }}
+            label='کد پیامک‌شده رو وارد کنید'
             type='text' />
         </Grid>
         <Grid item xs={4} sm={3} container >
@@ -186,12 +180,12 @@ const InputFields = ({
 
       <Grid container item direction='row' justify='center'>
         <Button
-          onClick={doRecoverPassword}
+          onClick={doChangePassword}
           variant='contained'
           color='primary'
           disabled={isFetching}
           fullWidth>
-          تغییر کن
+          تغییر بده
         </Button>
       </Grid>
     </>
@@ -205,9 +199,8 @@ const mapStateToProps = (state, ownProps) => ({
 export default connect(
   mapStateToProps,
   {
-    register,
     getVerifyCode,
-    getTeamData,
+    changePassword,
     addNotification,
     redirect,
   }
