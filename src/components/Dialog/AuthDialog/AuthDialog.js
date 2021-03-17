@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { useTranslate } from 'react-redux-multilingual/lib/context';
 import { useHistory } from 'react-router-dom';
 
-import { login } from '../../../redux/actions/authentication';
+import { login } from '../../../redux/actions/account';
 import { addNotification, } from '../../../redux/actions/notifications'
 
 const useStyles = makeStyles((theme) => ({
@@ -82,8 +82,6 @@ function AuthDialog({
 
   const doLogin = () => {
     if (!userIdentity || !password) {
-      console.log(userIdentity)
-
       addNotification({ message: 'لطفاً همه‌ی مواردی که ازت خواسته شده رو پر کن!', type: 'error' });
       return;
     }
@@ -200,7 +198,7 @@ function AuthDialog({
 }
 
 const mapStateToProps = (state) => ({
-  isFetching: state.authentication.isFetching,
+  isFetching: state.account.isFetching,
 });
 
 export default connect(

@@ -18,7 +18,7 @@ import { connect } from 'react-redux'
 import {
   changePassword,
   getVerifyCode,
-} from '../../redux/actions/authentication'
+} from '../../redux/actions/account'
 import { addNotification, } from '../../redux/actions/notifications'
 import { redirect } from '../../redux/actions/redirect'
 
@@ -101,8 +101,6 @@ const InputFields = ({
         }, 6000)
       })
   }
-
-  console.log(data)
 
   const doChangePassword = () => {
     const { phone, password, confirmationPassword } = data;
@@ -193,7 +191,7 @@ const InputFields = ({
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  isFetching: state.authentication.isFetching,
+  isFetching: state.account.isFetching,
 })
 
 export default connect(

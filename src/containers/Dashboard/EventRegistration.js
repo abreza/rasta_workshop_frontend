@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {
+  Redirect,
   useParams,
 } from "react-router-dom";
 
@@ -55,27 +56,41 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 300,
     textShadow: '1px 1px #dbd9d9',
   },
-}));
+}))
 
 const Profile = ({
   getEventRegistrationInfo,
   applyDiscount,
   addNotification,
   isFetching,
-  event_id,
-  member_uuid,
+  uuid,
   participant_id,
   team,
-  thisEvent,
+  event,
 }) => {
-  const [registrationPrice, setRegistrationPrice] = useState(70000);
+
+  const [price, setPrice] = useState(70000);
   const [discountCode, setDiscountCode] = useState('');
   const [marginTop, setMarginTop] = useState('');
+  const { event_id } = useParams('event_id');
   const classes = useStyles({ marginTop });
-  // after ZeroJourneyer it would be uncommented:
-  // const { event_id } = useParams('event_id'); 
 
-  // to apply discount and get new price:
+  useEffect(() => {
+    setMarginTop(document.getElementById("appBar").offsetHeight);
+  }, []);
+
+  useEffect(() => {
+    if (event_id && uuid) {
+      getEventRegistrationInfo({ event_id, uuid });
+    }
+  }, [event_id, uuid]);
+
+  useEffect(() => {
+    if (event && event.price) {
+      setPrice(event.price);
+    }
+  }, [event]);
+
   const doApplyDiscount = () => {
     if (!discountCode) {
       addNotification({ message: 'یه کد تخفیف وارد کن!', type: 'error' });
@@ -83,25 +98,6 @@ const Profile = ({
     }
     applyDiscount({ discount_code: discountCode, participant_id, event_id });
   }
-
-  // to apply newPrice on screen:
-  useEffect(() => {
-    if (thisEvent.newPrice) {
-      setRegistrationPrice(thisEvent.newPrice);
-    }
-  }, [thisEvent])
-
-  // to make top margin for main body of page, as long as appbar height, just for appbar
-  useEffect(() => {
-    setMarginTop(document.getElementById("appBar").offsetHeight);
-  }, []);
-
-  // to get registration information of event
-  useEffect(() => {
-    if (event_id && member_uuid) {
-      getEventRegistrationInfo({ event_id, member_uuid });
-    }
-  }, [event_id, member_uuid]);
 
   return (
     <>
@@ -113,7 +109,7 @@ const Profile = ({
               <Grid container direction='column' spacing={4}>
                 <Grid item>
                   <Typography className={classes.title} align='center'>
-                    {`«تیم ${'عقاب'}»`}
+                    {`«تیم ${''}»`}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -142,7 +138,7 @@ const Profile = ({
 
                 <Grid item>
                   <Typography className={classes.subtitle} align='center'>
-                    {`هزینه‌ی ثبت‌نام: ${toPersianNumber(registrationPrice)} تومان`}
+                    {`هزینه‌ی ثبت‌نام: ${toPersianNumber(price)} تومان`}
                   </Typography>
                 </Grid>
 
@@ -151,7 +147,7 @@ const Profile = ({
                     <TextField
                       onChange={setDiscountCode}
                       value={discountCode}
-                      variant='outline'
+                      variant='outlined'
                       fullWidth
                       label='کد تخفیف خود را وارد کنید'
                       type='text' />
@@ -186,15 +182,14 @@ const Profile = ({
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const event_id = state.authentication.events ? state.authentication.events[0] : '';
+  const { event_id } = useParams('event_id');
   const event = state.events ? state.events[event_id] : [];
   return ({
+    uuid: state.account.user ? state.account.user.uuid : '',
     isFetching: state.events.isFetching,
-    member_uuid: state.authentication.user_info ? state.authentication.user_info.uuid : '',
-    event_id,
     participant_id: event ? event.participant_id : '',
     team: event ? event.team : [],
-    thisEvent: event,
+    event,
   })
 }
 
