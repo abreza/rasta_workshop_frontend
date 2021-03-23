@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Layer, Line,Rect, Stage } from 'react-konva';
+import { Layer, Line, Rect, Stage } from 'react-konva';
 
 import DrawingModes from './DrawingModes';
 import KonvaNode from './KonvaNode';
@@ -29,7 +29,7 @@ function Drawing({
   );
 
   const backgroundEl = useRef();
-  const [isRemoving, setIsRemoving] = useState();
+  const [isRemoving, setIsRemoving] = useState(false);
   const [activeLine, setActiveLine] = useState();
 
   const onTouchStageStart = (e) => {
@@ -122,18 +122,20 @@ function Drawing({
               key={node.id}
               drawingMode={drawingMode}
               {...node}
-              onChange={(newAttrs) => updateShapeProps(node.id, newAttrs)}
+              onChange={(newAttrs) =>
+                updateShapeProps({ nodeId: node.id, shapeProps: newAttrs })
+              }
               onSelect={() => {
                 onDeselectNodes();
                 if (drawingMode === DrawingModes.DELETE) {
-                  removeNode(node.id);
+                  removeNode({ nodeId: node.id });
                 } else {
-                  onSelectNode(node.id);
+                  onSelectNode({ nodeId: node.id });
                 }
               }}
               onTouchMove={() => {
                 if (drawingMode === DrawingModes.DELETE && isRemoving) {
-                  removeNode(node.id);
+                  removeNode({ nodeId: node.id });
                 }
               }}
             />

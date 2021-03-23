@@ -21,14 +21,14 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  addNewTextNode,
-  changeMode,
-  deselectNodes,
+  addNewTextNodeAction,
+  changeWhiteboardModeAction,
+  deselectWhiteboardNodesAction,
   redo,
-  removeAllNodes,
-  removeSelectedNodes,
+  removeWhiteboardAllNodeAction,
+  removeWhiteboardSelectedNodeAction,
   undo,
-} from '../../redux/actions/whiteboard';
+} from '../../redux/slices/whiteboard';
 import downloadFromURL from '../../utils/downloadFromURL';
 import DrawingModes from '../Konva/Drawing/DrawingModes';
 import CircleMenu from './Components/CircleMenu';
@@ -100,7 +100,7 @@ function WhiteboardNavbar({
         <IconButton
           color={drawingMode === DrawingModes.DELETE ? 'primary' : 'default'}
           onClick={() => {
-            changeMode(DrawingModes.DELETE);
+            changeMode({ mode: DrawingModes.DELETE });
             removeSelectedNodes();
           }}>
           <SvgIcon>
@@ -118,7 +118,7 @@ function WhiteboardNavbar({
           color={drawingMode === DrawingModes.PAINTING ? 'primary' : 'default'}
           onClick={() => {
             deselectNodes();
-            changeMode(DrawingModes.PAINTING);
+            changeMode({ mode: DrawingModes.PAINTING });
           }}>
           <GestureIcon />
         </IconButton>
@@ -126,14 +126,14 @@ function WhiteboardNavbar({
         <RectangleMenu />
         <IconButton
           onClick={() => {
-            changeMode(DrawingModes.MOVE);
+            changeMode({ mode: DrawingModes.MOVE });
             addNewTextNode();
           }}>
           <TextFieldsIcon />
         </IconButton>
         <IconButton
           color={drawingMode === DrawingModes.MOVE ? 'primary' : 'default'}
-          onClick={() => changeMode(DrawingModes.MOVE)}>
+          onClick={() => changeMode({ mode: DrawingModes.MOVE })}>
           <PanToolIcon />
         </IconButton>
       </Grid>
@@ -148,11 +148,11 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  addNewTextNode,
-  changeMode,
-  removeSelectedNodes,
-  deselectNodes,
-  removeAllNodes,
+  addNewTextNode: addNewTextNodeAction,
+  changeMode: changeWhiteboardModeAction,
+  removeSelectedNodes: removeWhiteboardSelectedNodeAction,
+  deselectNodes: deselectWhiteboardNodesAction,
+  removeAllNodes: removeWhiteboardAllNodeAction,
   undo,
   redo,
 })(WhiteboardNavbar);
