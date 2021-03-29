@@ -9,15 +9,13 @@ import {
 import React, { useState } from 'react';
 import { useTranslate } from 'react-redux-multilingual/lib/context';
 
-function PasswordDialog({ open, handleClose, fsmId, startWorkshop }) {
+function StatePasswordDialog({ open, handleClose, onSubmit }) {
   const t = useTranslate();
   const [password, setPassword] = useState('');
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm">
-      <DialogTitle>
-        برای ورود به این کارگاه باید رمز آن را وارد کنید!
-      </DialogTitle>
+      <DialogTitle>برای ورود به این گام باید رمز آن را وارد کنید!</DialogTitle>
       <DialogContent>
         <TextField
           type="text"
@@ -31,7 +29,7 @@ function PasswordDialog({ open, handleClose, fsmId, startWorkshop }) {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => startWorkshop({ fsmId, password })}>
+          onClick={() => onSubmit(password)}>
           {t('submit')}
         </Button>
       </DialogActions>
@@ -39,4 +37,4 @@ function PasswordDialog({ open, handleClose, fsmId, startWorkshop }) {
   );
 }
 
-export default PasswordDialog;
+export default StatePasswordDialog;
